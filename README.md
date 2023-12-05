@@ -1,3 +1,2 @@
-# planer_v2
+# Planer Flutter Project
 
-A new Flutter project.
