@@ -1,2 +1,3 @@
-# planer_flutter
-Projekt aplikacji mobilnej planera w flutter.
+# planer_v2
+
+A new Flutter project.
