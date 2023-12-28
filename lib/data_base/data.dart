@@ -1,26 +1,24 @@
 import 'package:hive/hive.dart';
 
-class PlanerData {
-  List planerList = [];
+// ignore: camel_case_types
+class taskDataBase {
+  List taskList = [];
 
-  //ref our box
+  // reference
   final _mybox = Hive.box('mybox');
 
-  //first time open
-  void createInitialData() {
-    planerList = [
-    
-    ];
+  //first time open app
+  void creatInitialData() {
+    taskList = [];
   }
 
-  //load data
+  //load data base
   void loadData() {
-    planerList = _mybox.get('PLANERLIST');
-
+    taskList = _mybox.get('TASKLIST');
   }
 
-  //update database
-  void updateDataBase() {
-    _mybox.put('PLANERLIST', planerList);
+  //update data base
+  void updateData() {
+    _mybox.put('TASKLIST', taskList);
   }
 }

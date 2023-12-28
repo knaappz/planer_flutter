@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:planer_v2/planer_p/my_btns.dart';
+import 'package:project/buttons/start_btn.dart';
 
 class DialogBox extends StatefulWidget {
   final TextEditingController controller;
@@ -34,7 +34,7 @@ class _DialogBoxState extends State<DialogBox> {
       if (value != null) {
         setState(() {
           _dateTime = value;
-          widget.onDateSelected?.call(_dateTime); 
+          widget.onDateSelected?.call(_dateTime);
         });
       }
     });
@@ -61,7 +61,6 @@ class _DialogBoxState extends State<DialogBox> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-
               //user input
               TextFormField(
                 controller: widget.controller,
@@ -75,22 +74,21 @@ class _DialogBoxState extends State<DialogBox> {
               //button save
               Column(
                 children: [
-                  
                   //date picker
-                  MyBTN(
-                    text: 'Wybierz termin', 
+                  StartBTN(
+                    text: 'Wybierz termin',
                     onPressed: _showDatePicker,
                   ),
 
                   //save
-                  MyBTN(
+                  StartBTN(
                     text: 'Zapisz',
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         widget.onSave();
                       }
                     },
-                  ),                
+                  ),
                 ],
               ),
             ],
