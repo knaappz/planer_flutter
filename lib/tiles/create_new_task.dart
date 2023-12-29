@@ -13,6 +13,7 @@ class CreateTaskDialog extends StatefulWidget {
   final VoidCallback onSave;
   final VoidCallback onCancel;
   final Function(DateTime)? onDateSelected;
+  final VoidCallback resetDescription;
 
   const CreateTaskDialog({
     Key? key,
@@ -22,6 +23,7 @@ class CreateTaskDialog extends StatefulWidget {
     required this.onSave,
     required this.onCancel,
     required this.onDateSelected,
+    required this.resetDescription,
   }) : super(key: key);
 
   @override
@@ -67,10 +69,10 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      backgroundColor: MyColors.tColor,
+      backgroundColor: MyColors.tileColor,
       content: Container(
         width: 300,
-        height: 430,
+        height: 400,
         child: Column(
           children: [
             //tytuł
@@ -91,9 +93,11 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
               key: _formKey,
               child: TextFormField(
                 maxLines: 1,
-                maxLength: 30,
+                maxLength: 50,
                 controller: widget.controller,
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: MyColors.txtField,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -103,17 +107,19 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
               ),
             ),
 
-            //input opisu (nie działa)
+            //input opisu
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: SizedBox(
                 child: TextFormField(
-                  maxLength: 40,
+                  maxLength: 50,
                   controller: widget.descriptionController,
                   onChanged: (value) {
                     widget.onDescriptionChanged?.call(value);
                   },
                   decoration: InputDecoration(
+                    filled: true,
+                    fillColor: MyColors.txtField,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -132,10 +138,10 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
                       ? Text(
                           'Wybrana data: ${DateFormat('dd.MM.yyyy').format(_datetime)}',
                           style: TextStyle(
-                              color: MyColors.aBColor,
-                              fontFamily: 'Oxygen',
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline),
+                            color: MyColors.aBColor,
+                            fontSize: 18,
+                            fontFamily: 'Oxygen',
+                          ),
                         )
                       : Text(
                           'Ustaw date by zapisać...',
@@ -160,6 +166,7 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
                               if (_formKey.currentState!.validate() &&
                                   isDateSelected == true) {
                                 widget.onSave();
+                                widget.resetDescription();
                               }
                             },
                             text: 'Zapisz'),

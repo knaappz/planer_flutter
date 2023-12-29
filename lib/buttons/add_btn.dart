@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:project/pages/home_page.dart';
 
 class AddBTN extends StatelessWidget {
   final VoidCallback onPressed;
@@ -12,7 +13,7 @@ class AddBTN extends StatelessWidget {
     return FloatingActionButton(
       elevation: 8,
       onPressed: onPressed,
-      backgroundColor: const Color.fromARGB(255, 174, 121, 72),
+      backgroundColor: MyColors.aBColor,
       child: Icon(
         Icons.add,
         size: 30,

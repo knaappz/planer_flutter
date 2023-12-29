@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:project/buttons/desc_btn.dart';
 import 'package:project/pages/home_page.dart';
 
 class TaskTile extends StatelessWidget {
@@ -13,16 +13,15 @@ class TaskTile extends StatelessWidget {
   Function(BuildContext)? deleteFunc;
 
   TaskTile({
-    super.key,
+    Key? key, // Poprawiłem miejsce, w którym znajduje się key
     required this.taskName,
     required this.taskDescription,
     required this.taskCompleted,
     required this.onChanged,
     required this.deleteFunc,
     required this.taskDate,
-  });
+  }) : super(key: key);
 
-  //główny kod tasktile
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,20 +39,23 @@ class TaskTile extends StatelessWidget {
           ],
         ),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.only(top: 20, bottom: 20),
           decoration: BoxDecoration(
-              color: const Color.fromRGBO(253, 247, 239, 1),
-              borderRadius: BorderRadius.circular(20)),
+            color: MyColors.tileColor,
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //checkbox
               Transform.scale(
                 scale: 1.2,
-                child: Checkbox(
-                  value: taskCompleted,
-                  onChanged: onChanged,
-                  activeColor: MyColors.aBColor,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+                  child: Checkbox(
+                    value: taskCompleted,
+                    onChanged: onChanged,
+                    activeColor: MyColors.aBColor,
+                  ),
                 ),
               ),
 
@@ -61,58 +63,66 @@ class TaskTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //nazwa zadania
-                  Text(
-                    //ograniczenie długości znaków do 18, oraz dodanie przejscia do kolejnej linij
-                    taskName.length > 18
-                        ? '${taskName.substring(0, 18)}\n${taskName.substring(18)}'
-                        : taskName,
-                    maxLines: 2,
-                    softWrap: true,
-                    style: TextStyle(
-                        decoration: taskCompleted
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                        fontSize: 18,
-                        fontFamily: 'Oxygen',
-                        fontWeight: FontWeight.w500),
-                  ),
-
-                  //termin zadania
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      'Termin: ${taskDate.day}.${taskDate.month}.${taskDate.year}',
-                      style: TextStyle(
-                        decoration: taskCompleted
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                        fontSize: 15,
-                        color: Colors.grey,
+                  SizedBox(
+                    width: 240,
+                    child: RichText(
+                      text: TextSpan(
+                        text: taskName,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontFamily: 'Oxygen',
+                          fontWeight: FontWeight.w700,
+                          decoration: taskCompleted
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
+                        ),
                       ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
 
                   //opis zadania
                   Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                      width: 240,
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Opis: $taskDescription',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontFamily: 'Oxygen',
+                            fontWeight: FontWeight.w500,
+                            decoration: taskCompleted
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                          ),
+                        ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+
+                  Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      taskDescription.length > 25
-                          ? '${taskDescription.substring(0, 20)}\n${taskDescription.substring(18)}'
-                          : taskDescription,
-                      maxLines: 5,
+                      'Do: ${taskDate.day}.${taskDate.month}.${taskDate.year}',
                       style: TextStyle(
                         decoration: taskCompleted
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
                         fontSize: 15,
-                        color: const Color.fromARGB(255, 78, 78, 78),
+                        fontFamily: 'Oxygen',
+                        color: Colors.deepOrange,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
-
-              DescBTN(onPressed: () {})
             ],
           ),
         ),

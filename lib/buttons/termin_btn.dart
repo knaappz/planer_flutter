@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
+import 'package:project/pages/home_page.dart';
 
 class TerminBTN extends StatelessWidget {
   final String text;
@@ -13,7 +14,7 @@ class TerminBTN extends StatelessWidget {
     return MaterialButton(
       elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: Color.fromRGBO(167, 114, 64, 1),
+      color: MyColors.aBColor,
       onPressed: onPressed,
       child: Text(
         text,

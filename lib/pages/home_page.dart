@@ -18,10 +18,12 @@ class HomePage extends StatefulWidget {
 
 class MyColors {
   static const Color bgColor = Color.fromRGBO(255, 205, 147, 1);
-  static const Color aBColor = Color.fromRGBO(130, 92, 58, 1);
-  static const Color tColor = Color.fromRGBO(255, 228, 204, 1);
-  static const Color tileColor = Color.fromRGBO(255, 243, 229, 1);
-  static const Color addColor = Color.fromRGBO(226, 156, 91, 1);
+  static const Color alertColor = Color.fromRGBO(255, 231, 203, 1);
+
+  static const Color aBColor = Color.fromRGBO(192, 137, 89, 1);
+  static const Color titleColor = Color.fromRGBO(255, 255, 255, 1);
+  static const Color tileColor = Color.fromRGBO(255, 238, 219, 1);
+  static const Color txtField = Color.fromRGBO(255, 255, 255, 1);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -97,6 +99,12 @@ class _HomePageState extends State<HomePage> {
               description = newDescription;
             });
           },
+          resetDescription: () {
+            setState(() {
+              // Resetuj opis
+              description = 'brak';
+            });
+          },
         );
       },
     );
@@ -110,11 +118,11 @@ class _HomePageState extends State<HomePage> {
     db.updateData();
   }
 
-  //sccaffold główna strona
+  //scaffold główna strona
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 234, 210),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: MyColors.aBColor,
@@ -122,7 +130,7 @@ class _HomePageState extends State<HomePage> {
             child: Text(
           'TAASKZILLA',
           style: TextStyle(
-            color: MyColors.tColor,
+            color: MyColors.titleColor,
             fontFamily: 'LondrinaSolid',
             fontSize: 40,
             fontWeight: FontWeight.w300,
@@ -153,19 +161,30 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (context, index) {
           DateTime termin = db.taskList[index][1];
           bool terminLine = index == 0 || termin != db.taskList[index - 1][1];
+          bool isToday = termin.year == DateTime.now().year &&
+              termin.month == DateTime.now().month &&
+              termin.day == DateTime.now().day;
+          bool isTomorrow =
+              termin.year == DateTime.now().add(Duration(days: 1)).year &&
+                  termin.month == DateTime.now().add(Duration(days: 1)).month &&
+                  termin.day == DateTime.now().add(Duration(days: 1)).day;
 
           return Column(
             children: [
               //kafelek sergregujący daty
               if (terminLine)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Container(
                     color: Color.fromARGB(125, 130, 92, 58),
                     padding: EdgeInsets.all(8),
                     child: Center(
                       child: Text(
-                        '${termin.day}.${termin.month}.${termin.year}',
+                        isToday
+                            ? "Dzisiaj"
+                            : isTomorrow
+                                ? "Jutro"
+                                : '${termin.day}.${termin.month}.${termin.year}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -176,13 +195,17 @@ class _HomePageState extends State<HomePage> {
                 ),
 
               //kafelek tasktile [nazwa, data, czyukończony oraz usunięcie]
-              TaskTile(
-                taskName: db.taskList[index][0],
-                taskDescription: db.taskList[index][3],
-                taskDate: db.taskList[index][1],
-                taskCompleted: db.taskList[index][2],
-                onChanged: (value) => checkBoxChanged(value, index),
-                deleteFunc: (context) => deleteTask(index),
+              Column(
+                children: [
+                  TaskTile(
+                    taskName: db.taskList[index][0],
+                    taskDescription: db.taskList[index][3],
+                    taskDate: db.taskList[index][1],
+                    taskCompleted: db.taskList[index][2],
+                    onChanged: (value) => checkBoxChanged(value, index),
+                    deleteFunc: (context) => deleteTask(index),
+                  ),
+                ],
               ),
             ],
           );
