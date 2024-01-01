@@ -50,7 +50,7 @@ class TaskTile extends StatelessWidget {
               Transform.scale(
                 scale: 1.2,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+                  padding: const EdgeInsets.only(left: 15.0),
                   child: Checkbox(
                     value: taskCompleted,
                     onChanged: onChanged,
@@ -59,69 +59,85 @@ class TaskTile extends StatelessWidget {
                 ),
               ),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //nazwa zadania
-                  SizedBox(
-                    width: 240,
-                    child: RichText(
-                      text: TextSpan(
-                        text: taskName,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontFamily: 'Oxygen',
-                          fontWeight: FontWeight.w700,
-                          decoration: taskCompleted
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                      border: Border(
+                          left: BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                              style: BorderStyle.solid))),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //nazwa zadania
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                        ),
+                        child: SizedBox(
+                          width: 240,
+                          child: RichText(
+                            text: TextSpan(
+                              text: taskName,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontFamily: 'Oxygen',
+                                fontWeight: FontWeight.w700,
+                                decoration: taskCompleted
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              ),
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
 
-                  //opis zadania
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: SizedBox(
-                      width: 240,
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Opis: $taskDescription',
+                      //opis zadania
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 10),
+                        child: SizedBox(
+                          width: 240,
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Opis: $taskDescription',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontFamily: 'Oxygen',
+                                fontWeight: FontWeight.w500,
+                                decoration: taskCompleted
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                              ),
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 8),
+                        child: Text(
+                          'Do: ${taskDate.day}.${taskDate.month}.${taskDate.year}',
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontFamily: 'Oxygen',
-                            fontWeight: FontWeight.w500,
                             decoration: taskCompleted
                                 ? TextDecoration.lineThrough
                                 : TextDecoration.none,
+                            fontSize: 15,
+                            fontFamily: 'Oxygen',
+                            color: Colors.deepOrange,
                           ),
                         ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
+                    ],
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      'Do: ${taskDate.day}.${taskDate.month}.${taskDate.year}',
-                      style: TextStyle(
-                        decoration: taskCompleted
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                        fontSize: 15,
-                        fontFamily: 'Oxygen',
-                        color: Colors.deepOrange,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
