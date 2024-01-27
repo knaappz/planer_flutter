@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:project/buttons/add_btn.dart';
+// import 'package:project/buttons/edit.dart';
 import 'package:project/data_base/data.dart';
 import 'package:project/tiles/create_new_task.dart';
 import 'package:project/tiles/free_tile.dart';
@@ -17,12 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class MyColors {
+  static const Color aBColor = Color.fromARGB(255, 48, 47, 47);
   static const Color bgColor = Color.fromRGBO(255, 205, 147, 1);
   static const Color alertColor = Color.fromRGBO(255, 231, 203, 1);
-
-  static const Color aBColor = Color.fromRGBO(192, 137, 89, 1);
-  static const Color titleColor = Color.fromRGBO(255, 255, 255, 1);
-  static const Color tileColor = Color.fromRGBO(255, 238, 219, 1);
   static const Color txtField = Color.fromRGBO(255, 255, 255, 1);
 }
 
@@ -35,7 +33,6 @@ class _HomePageState extends State<HomePage> {
   String initialTaskName = '';
   String initialDescription = '';
   DateTime initialDate = DateTime.now();
-
   DateTime selectedDate = DateTime.now();
 
   final _controller = TextEditingController();
@@ -45,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     //załadowanie pustej bazy danych
     if (_mybox.get('TASKLIST') == null) {
-      db.creatInitialData();
+      db.createInitialData();
     } else {
       //załadowanie istniejących danych
       db.loadData();
@@ -101,8 +98,7 @@ class _HomePageState extends State<HomePage> {
           },
           resetDescription: () {
             setState(() {
-              // Resetuj opis
-              description = 'brak';
+              description = '';
             });
           },
         );
@@ -126,16 +122,15 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: MyColors.aBColor,
-        title: Center(
-            child: Text(
-          'TAASKZILLA',
+        title: Text(
+          'TASKZILLA',
           style: TextStyle(
-            color: MyColors.titleColor,
+            color: Colors.white,
             fontFamily: 'LondrinaSolid',
             fontSize: 40,
             fontWeight: FontWeight.w300,
           ),
-        )),
+        ),
       ),
 
       //widget lista tasków w tym tasktile
@@ -157,60 +152,66 @@ class _HomePageState extends State<HomePage> {
 
       //utworzenie listy zadań
       return ListView.builder(
-        itemCount: db.taskList.length,
-        itemBuilder: (context, index) {
-          DateTime termin = db.taskList[index][1];
-          bool terminLine = index == 0 || termin != db.taskList[index - 1][1];
-          bool isToday = termin.year == DateTime.now().year &&
-              termin.month == DateTime.now().month &&
-              termin.day == DateTime.now().day;
-          bool isTomorrow =
-              termin.year == DateTime.now().add(Duration(days: 1)).year &&
-                  termin.month == DateTime.now().add(Duration(days: 1)).month &&
-                  termin.day == DateTime.now().add(Duration(days: 1)).day;
+          padding: EdgeInsets.all(10),
+          itemCount: db.taskList.length,
+          itemBuilder: (context, index) {
+            DateTime termin = db.taskList[index][1];
+            bool terminLine = index == 0 || termin != db.taskList[index - 1][1];
+            bool isToday = termin.year == DateTime.now().year &&
+                termin.month == DateTime.now().month &&
+                termin.day == DateTime.now().day;
+            bool isTomorrow = termin.year ==
+                    DateTime.now().add(Duration(days: 1)).year &&
+                termin.month == DateTime.now().add(Duration(days: 1)).month &&
+                termin.day == DateTime.now().add(Duration(days: 1)).day;
 
-          return Column(
-            children: [
-              //kafelek sergregujący daty
-              if (terminLine)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    color: Color.fromARGB(125, 130, 92, 58),
-                    padding: EdgeInsets.all(8),
-                    child: Center(
-                      child: Text(
-                        isToday
-                            ? "Dzisiaj"
-                            : isTomorrow
-                                ? "Jutro"
-                                : '${termin.day}.${termin.month}.${termin.year}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+            return Column(
+              children: [
+                //kafelek sergregujący daty
+                if (terminLine)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10, top: 10),
+                    child: Container(
+                      width: 100,
+                      decoration: const BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  width: 1,
+                                  style: BorderStyle.solid))),
+                      padding: EdgeInsets.all(5),
+                      child: Center(
+                        child: Text(
+                          isToday
+                              ? "Dzisiaj"
+                              : isTomorrow
+                                  ? "Jutro"
+                                  : '${termin.day}.${termin.month}.${termin.year}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-              //kafelek tasktile [nazwa, data, czyukończony oraz usunięcie]
-              Column(
-                children: [
-                  TaskTile(
-                    taskName: db.taskList[index][0],
-                    taskDescription: db.taskList[index][3],
-                    taskDate: db.taskList[index][1],
-                    taskCompleted: db.taskList[index][2],
-                    onChanged: (value) => checkBoxChanged(value, index),
-                    deleteFunc: (context) => deleteTask(index),
-                  ),
-                ],
-              ),
-            ],
-          );
-        },
-      );
+                //kafelek tasktile [nazwa, data, czyukończony oraz usunięcie]
+                Column(
+                  children: [
+                    TaskTile(
+                      taskName: db.taskList[index][0],
+                      taskDescription: db.taskList[index][3],
+                      taskDate: db.taskList[index][1],
+                      taskCompleted: db.taskList[index][2],
+                      onChanged: (value) => checkBoxChanged(value, index),
+                      deleteFunc: (context) => deleteTask(index),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          });
     }
   }
 

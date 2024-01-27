@@ -11,18 +11,26 @@ class TerminBTN extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: MyColors.aBColor,
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: TextStyle(
-          fontFamily: 'Oxygen',
-          fontSize: 16,
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: SizedBox(
+        width: double.infinity,
+        height: 40,
+        child: MaterialButton(
+          elevation: 8,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          color: MyColors.aBColor,
+          onPressed: onPressed,
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Oxygen',
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ),
     );

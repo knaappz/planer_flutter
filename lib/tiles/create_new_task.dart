@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:project/buttons/cancel_btn.dart';
 import 'package:project/buttons/start_btn.dart';
 import 'package:project/buttons/termin_btn.dart';
 import 'package:project/pages/home_page.dart';
@@ -32,6 +33,7 @@ class CreateTaskDialog extends StatefulWidget {
 
 class _CreateTaskDialogState extends State<CreateTaskDialog> {
   DateTime _datetime = DateTime.now();
+
   bool isDateSelected = false;
 
   //wywołanie kalendarza
@@ -62,18 +64,27 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
     return null;
   }
 
+  void _resetState() {
+    setState(() {
+      _datetime = DateTime.now();
+      isDateSelected = false;
+      widget.controller.clear();
+      widget.descriptionController.clear();
+    });
+  }
+
   //alert dialog
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(10.0),
       ),
-      backgroundColor: MyColors.tileColor,
-      content: Container(
+      backgroundColor: Colors.white,
+      content: SizedBox(
         width: 300,
-        height: 400,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             //tytuł
             Padding(
@@ -96,89 +107,63 @@ class _CreateTaskDialogState extends State<CreateTaskDialog> {
                 maxLength: 50,
                 controller: widget.controller,
                 decoration: InputDecoration(
+                  border: UnderlineInputBorder(),
                   filled: true,
                   fillColor: MyColors.txtField,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  hintText: "Podaj nazwe zadania...",
+                  labelText: "Nazwa zadania",
                 ),
                 validator: _validateInput,
               ),
             ),
 
             //input opisu
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: SizedBox(
-                child: TextFormField(
-                  maxLength: 50,
-                  controller: widget.descriptionController,
-                  onChanged: (value) {
-                    widget.onDescriptionChanged?.call(value);
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: MyColors.txtField,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    hintText: "Dodaj krótki opis...",
-                  ),
+            SizedBox(
+              child: TextFormField(
+                maxLength: 100,
+                controller: widget.descriptionController,
+                onChanged: (value) {
+                  widget.onDescriptionChanged?.call(value);
+                },
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: MyColors.txtField,
+                  border: UnderlineInputBorder(),
+                  labelText: "Opis",
                 ),
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  //sprawdzenie czy wybrano termin
-                  isDateSelected
-                      ? Text(
-                          'Wybrana data: ${DateFormat('dd.MM.yyyy').format(_datetime)}',
-                          style: TextStyle(
-                            color: MyColors.aBColor,
-                            fontSize: 18,
-                            fontFamily: 'Oxygen',
-                          ),
-                        )
-                      : Text(
-                          'Ustaw date by zapisać...',
-                          style:
-                              TextStyle(color: Colors.brown[400], fontSize: 13),
-                        ),
+            TerminBTN(
+              onPressed: () {
+                _showDatePicker();
+              },
+              text: isDateSelected
+                  ? 'Wybrano: ${DateFormat('dd.MM.yyyy').format(_datetime)}'
+                  : 'Wybierz termin',
+            ),
+            //wstecz
 
-                  //wybór terminu
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: TerminBTN(
-                        onPressed: _showDatePicker, text: 'Wybierz termin'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        //zapisz
-                        StartBTN(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate() &&
-                                  isDateSelected == true) {
-                                widget.onSave();
-                                widget.resetDescription();
-                              }
-                            },
-                            text: 'Zapisz'),
-
-                        //wstecz
-                        StartBTN(onPressed: widget.onCancel, text: 'Wstecz'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CancelBTN(
+                  onPressed: () {
+                    _resetState();
+                    Navigator.of(context).pop();
+                  },
+                  text: 'Wstecz',
+                ),
+                StartBTN(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate() &&
+                          isDateSelected == true) {
+                        widget.onSave();
+                        widget.resetDescription();
+                      }
+                    },
+                    text: 'Zapisz'),
+              ],
+            ),
           ],
         ),
       ),

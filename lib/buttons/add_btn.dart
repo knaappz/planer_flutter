@@ -10,13 +10,18 @@ class AddBTN extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      elevation: 8,
-      onPressed: onPressed,
-      backgroundColor: MyColors.aBColor,
-      child: Icon(
-        Icons.add,
-        size: 30,
+    return SizedBox(
+      width: 70,
+      height: 70,
+      child: FloatingActionButton(
+        elevation: 8,
+        onPressed: onPressed,
+        backgroundColor: const Color.fromARGB(255, 27, 26, 26),
+        child: Icon(
+          Icons.add,
+          size: 30,
+          color: Colors.white,
+        ),
       ),
     );
   }

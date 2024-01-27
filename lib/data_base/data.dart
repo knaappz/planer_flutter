@@ -8,7 +8,7 @@ class taskDataBase {
   final _mybox = Hive.box('mybox');
 
   //first time open app
-  void creatInitialData() {
+  void createInitialData() {
     taskList = [];
   }
 

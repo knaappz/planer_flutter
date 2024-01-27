@@ -1,10 +1,10 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:project/pages/home_page.dart';
 
-class TaskTile extends StatelessWidget {
+class TaskTile extends StatefulWidget {
   final String taskName;
   final String taskDescription;
   final DateTime taskDate;
@@ -23,126 +23,113 @@ class TaskTile extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25, right: 25, bottom: 20),
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: const StretchMotion(),
-          children: [
-            SlidableAction(
-              onPressed: deleteFunc,
-              backgroundColor: Colors.red.shade300,
-              icon: Icons.delete,
-              borderRadius: BorderRadius.circular(20),
-            )
-          ],
-        ),
-        child: Container(
-          padding: const EdgeInsets.only(top: 20, bottom: 20),
-          decoration: BoxDecoration(
-            color: MyColors.tileColor,
-            borderRadius: BorderRadius.circular(20),
+  State<TaskTile> createState() => _TaskTileState();
+}
+
+class _TaskTileState extends State<TaskTile> {
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Slidable(
+            endActionPane: ActionPane(
+              motion: const DrawerMotion(),
+              extentRatio: 0.25,
+              children: [
+                SlidableAction(
+                  onPressed: widget.deleteFunc,
+                  backgroundColor: Colors.red.shade300,
+                  icon: Icons.delete,
+                )
+              ],
+            ),
+            child: buildTask(context),
           ),
-          child: Row(
-            children: [
-              //checkbox
-              Transform.scale(
-                scale: 1.2,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: Checkbox(
-                    value: taskCompleted,
-                    onChanged: onChanged,
-                    activeColor: MyColors.aBColor,
-                  ),
+        ),
+      );
+
+  Widget buildTask(BuildContext context) => Container(
+        padding: const EdgeInsets.only(top: 15, bottom: 15),
+        decoration: BoxDecoration(
+          color: MyColors.aBColor,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            //checkbox
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Transform.scale(
+                scale: 1.6,
+                child: Checkbox(
+                  side: BorderSide(width: 1, color: Colors.white),
+                  value: widget.taskCompleted,
+                  onChanged: widget.onChanged,
+                  checkColor: Colors.white,
+                  activeColor: Colors.orange,
                 ),
               ),
+            ),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          left: BorderSide(
-                              color: Colors.black,
-                              width: 1,
-                              style: BorderStyle.solid))),
+            Container(
+              decoration: const BoxDecoration(
+                  border: Border(
+                      left: BorderSide(
+                          color: Colors.orange,
+                          width: 2,
+                          style: BorderStyle.solid))),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: SizedBox(
+                  width: 180,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //nazwa zadania
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child: SizedBox(
-                          width: 240,
-                          child: RichText(
-                            text: TextSpan(
-                              text: taskName,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontFamily: 'Oxygen',
-                                fontWeight: FontWeight.w700,
-                                decoration: taskCompleted
-                                    ? TextDecoration.lineThrough
-                                    : TextDecoration.none,
-                              ),
-                            ),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
+                      RichText(
+                        text: TextSpan(
+                          text: widget.taskName,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontFamily: 'Oxygen',
+                            fontWeight: FontWeight.w700,
+                            decoration: widget.taskCompleted
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
                           ),
                         ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
 
                       //opis zadania
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, top: 10),
-                        child: SizedBox(
-                          width: 240,
+                      if (widget.taskDescription.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5, bottom: 5),
                           child: RichText(
                             text: TextSpan(
-                              text: 'Opis: $taskDescription',
+                              text: widget.taskDescription,
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontSize: 15,
                                 fontFamily: 'Oxygen',
                                 fontWeight: FontWeight.w500,
-                                decoration: taskCompleted
+                                decoration: widget.taskCompleted
                                     ? TextDecoration.lineThrough
                                     : TextDecoration.none,
                               ),
                             ),
-                            maxLines: 3,
+                            maxLines: 5,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, top: 8),
-                        child: Text(
-                          'Do: ${taskDate.day}.${taskDate.month}.${taskDate.year}',
-                          style: TextStyle(
-                            decoration: taskCompleted
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                            fontSize: 15,
-                            fontFamily: 'Oxygen',
-                            color: Colors.deepOrange,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
-    );
-  }
+      );
 }
